@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 services:
   - docker
 
@@ -7,36 +7,27 @@ cache:
      - $HOME/.cache
 
 language: cpp
-compiler:
-  - clang
-
-os:
-  - linux
-  - osx
 
 env:
     matrix:
       - OS=ubuntu DIST=trusty
-      - OS=ubuntu DIST=precise
-      - OS=el DIST=6
-      - OS=el DIST=7
-os: osx
+      # - OS=ubuntu DIST=precise
+      # - OS=el DIST=6
+      # - OS=el DIST=7
+
 before_install:
   - git submodule update --init
   - git clone https://github.com/packpack/packpack.git packpack
 
-before_script:
-  - cmake .
 script:
-  - make -j4
   - packpack/packpack
 
 branches:
   except:
     - legacy
-notifications:
-  recipients:
-    - developers@moneymanagerex.org
-  email:
-    on_success: change
-    on_failure: always
+# notifications:
+#   recipients:
+#     - developers@moneymanagerex.org
+#   email:
+#     on_success: change
+#     on_failure: always
