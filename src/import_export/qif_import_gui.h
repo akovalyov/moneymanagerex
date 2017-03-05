@@ -34,7 +34,7 @@ class mmQIFImportDialog : public wxDialog
 
 public:
     mmQIFImportDialog() {}
-    mmQIFImportDialog(wxWindow* parent);
+    mmQIFImportDialog(wxWindow* parent, int account_id);
 
     bool Create(wxWindow* parent, wxWindowID id
         , const wxString& caption
@@ -62,28 +62,28 @@ private:
     int getOrCreateAccounts();
     void getOrCreatePayees();
     void getOrCreateCategories();
-    void compliteTransaction(std::map <int, wxString> &trx, const wxString &accName);
-    bool compliteTransaction(/*in*/ const std::map <int, wxString> &i
-        , /*out*/ Model_Checking::Data* trx);
+    void completeTransaction(std::unordered_map <int, wxString> &trx, const wxString &accName);
+    bool completeTransaction(/*in*/ const std::unordered_map <int, wxString> &i
+        , /*out*/ Model_Checking::Data* trx, wxString& msg);
     bool mergeTransferPair(Model_Checking::Cache& to, Model_Checking::Cache& from);
     void appendTransfers(Model_Checking::Cache &destination, Model_Checking::Cache &target);
     void joinSplit(Model_Checking::Cache &destination, std::vector <Model_Splittransaction::Cache> &target);
     void saveSplit();
     void getDateMask();
     void refreshTabs(int tabs);
-    void parseDate(const wxString &dateStr, std::map<wxString, wxString> &date_formats_temp);
+    void parseDate(const wxString &dateStr, std::unordered_map<wxString, wxString> &date_formats_temp);
 
     //QIF paragraphs represented like maps type = data
-    std::vector <std::map <int, wxString> > vQIF_trxs_;
-    std::map<wxString, int> m_date_parsing_stat; //it counts successfully parsed dates with selected date mask
-    std::map <wxString, std::map <int, wxString> > m_QIFaccounts;
-    std::map <wxString, int> m_QIFaccountsID;
-    std::map <wxString, int> m_QIFpayeeNames;
+    std::vector <std::unordered_map <int, wxString> > vQIF_trxs_;
+    std::unordered_map<wxString, int> m_date_parsing_stat; //it counts successfully parsed dates with selected date mask
+    std::unordered_map <wxString, std::unordered_map <int, wxString> > m_QIFaccounts;
+    std::unordered_map <wxString, int> m_QIFaccountsID;
+    std::unordered_map <wxString, int> m_QIFpayeeNames;
     wxArrayString m_payee_names;
-    std::map <wxString, std::pair<int, int> > m_QIFcategoryNames;
+    std::unordered_map <wxString, std::pair<int, int> > m_QIFcategoryNames;
     std::vector <Model_Splittransaction::Cache> m_splitDataSets;
-    static const std::map <wxString, int> m_QIFaccountTypes;
 
+    int m_init_account_id;
     wxString m_accountNameStr;
     wxString m_dateFormatStr;
     bool m_userDefinedDateMask;
@@ -98,6 +98,7 @@ private:
     wxDataViewListCtrl* categoryListBox_;
     wxButton* button_search_;
     wxTextCtrl* file_name_ctrl_;
+    wxChoice* m_choiceEncoding;
     wxTextCtrl* log_field_;
     wxCheckBox* dateFromCheckBox_;
     wxCheckBox* dateToCheckBox_;

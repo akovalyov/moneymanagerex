@@ -46,7 +46,7 @@ static void handle_sql(struct mg_connection* nc, struct http_message* hm)
 
     json::Object result;
     result[L"query"] = json::String(wxString(query).ToStdWstring());
-    //bool ret = Model_Report::instance().get_objects_from_sql(wxString(query), result); 
+    bool ret = Model_Report::instance().get_objects_from_sql(wxString(query), result); 
 
     for (const auto & r : Model_Setting::instance().all())
     {
@@ -116,7 +116,7 @@ wxThread::ExitCode WebServerThread::Entry()
     }
     
     mg_set_protocol_http_websocket(nc);
-    std::string document_root(wxFileName(mmex::getReportIndex()).GetPath().c_str());
+    std::string document_root(wxFileName(mmex::getReportFullName("index")).GetPath().c_str());
     s_http_server_opts.document_root = document_root.c_str();
     s_http_server_opts.enable_directory_listing = "yes";
 

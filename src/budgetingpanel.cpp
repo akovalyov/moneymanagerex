@@ -94,6 +94,7 @@ bool mmBudgetingPanel::Create(wxWindow *parent
     wxPanel::Create(parent, winid, pos, size, style, name);
 
     this->windowsFreezeThaw();
+    wxDateTime start = wxDateTime::UNow();
     CreateControls();
     GetSizer()->Fit(this);
     GetSizer()->SetSizeHints(this);
@@ -103,7 +104,7 @@ bool mmBudgetingPanel::Create(wxWindow *parent
         listCtrlBudget_->EnsureVisible(0);
 
     this->windowsFreezeThaw();
-    Model_Usage::instance().pageview(this);
+    Model_Usage::instance().pageview(this, (wxDateTime::UNow() - start).GetMilliseconds().ToLong());
     return TRUE;
 }
 
@@ -290,7 +291,8 @@ void mmBudgetingPanel::CreateControls()
     /* Get data from inidb */
     for (int i = 0; i < listCtrlBudget_->GetColumnCount(); ++i)
     {
-        int col = Model_Setting::instance().GetIntSetting(wxString::Format(listCtrlBudget_->m_col_width, i), listCtrlBudget_->m_columns[i].WIDTH);
+        int col = Model_Setting::instance().GetIntSetting(wxString::Format(listCtrlBudget_->m_col_width, i)
+            , listCtrlBudget_->m_columns[i].WIDTH);
         listCtrlBudget_->SetColumnWidth(i, col);
     }
     itemBoxSizer2->Add(listCtrlBudget_, 1, wxGROW | wxALL, 1);

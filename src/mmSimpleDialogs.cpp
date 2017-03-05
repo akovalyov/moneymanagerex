@@ -53,6 +53,27 @@ void mmSingleChoiceDialog::fix_translation()
     if (ca) ca->SetLabel(wxGetTranslation(g_CancelLabel));
 }
 
+//mmMultiChoiceDialog
+mmMultiChoiceDialog::mmMultiChoiceDialog()
+{
+}
+mmMultiChoiceDialog::mmMultiChoiceDialog(wxWindow* parent, const wxString& message,
+    const wxString& caption, const Model_Account::Data_Set& accounts)
+{
+    wxArrayString choices;
+    for (const auto & item : accounts) choices.Add(item.ACCOUNTNAME);
+    wxMultiChoiceDialog::Create(parent, message, caption, choices);
+    fix_translation();
+}
+void mmMultiChoiceDialog::fix_translation()
+{
+    wxButton* ok = (wxButton*)FindWindow(wxID_OK);
+    if (ok) ok->SetLabel(_("&OK "));
+    wxButton* ca = (wxButton*)FindWindow(wxID_CANCEL);
+    if (ca) ca->SetLabel(wxGetTranslation(g_CancelLabel));
+}
+
+
 //  mmDialogComboBoxAutocomplete
 mmDialogComboBoxAutocomplete::mmDialogComboBoxAutocomplete()
 {
@@ -82,7 +103,7 @@ bool mmDialogComboBoxAutocomplete::Create(wxWindow* parent, wxWindowID id,
     Sizer->AddSpacer(15);
     cbText_ = new wxComboBox(this, wxID_STATIC, Default, wxDefaultPosition, wxSize(150, -1), Choices);
     cbText_->AutoComplete(Choices);
-    Sizer->Add(cbText_, wxSizerFlags(flags).Expand());
+    Sizer->Add(cbText_, wxSizerFlags().Border(wxLEFT | wxRIGHT, 15).Expand());
     Sizer->AddSpacer(20);
     wxSizer* Button = CreateButtonSizer(wxOK | wxCANCEL);
     Sizer->Add(Button, flags);
